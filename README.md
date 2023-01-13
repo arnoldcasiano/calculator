@@ -1,2 +1,2 @@
 # calculator
-Simple calculator
+Mock iphone simple calculator
