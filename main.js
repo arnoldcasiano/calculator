@@ -1,6 +1,30 @@
-// All numbers and all operators 
+// All numbers and all operators buttons
 const operations = document.querySelectorAll('.ops');
 const numbers = document.querySelectorAll('.number');
+
+// Clear and Equals buttons
+const clearBtn = document.querySelector('.clear');
+const equalsBtn = document.querySelector('.equals');
+const screen = document.getElementById('screen');
+// const posNegBtn = document.querySelector('.pos-neg');
+// const percentBtn = document.querySelector('.percent');
+
+
+// Temporary arrays to store values that will display on the calc screen
+let temp1 = [];
+let temp2 = [];
+
+// Stores numbers that need to be operated on
+let number1;
+let number2;
+
+// This stores the result that will be outputed in the screen
+let result;
+
+// Temporary stores the current operator
+let tempOps = '';
+
+let operatorSelected = false;
 
 // Since numbers is a nodelist, Loop through each and get the numbers id to display each number
 numbers.forEach(number => {
@@ -44,207 +68,104 @@ operations.forEach(operator => {
     operator.addEventListener('click', function(e) {
         switch (e.target.id) {
             case 'add':
-                SelectedOps('+');
-                ValueOne(temp);
+                tempOps = '+';
+                operatorSelected = true;
                 break;
             case 'subtract':
-                SelectedOps('-');
+                tempOps = '-';
+                operatorSelected = true;
                 break;
             case 'multiply':
-                SelectedOps('x');
+                tempOps = 'x';
+                operatorSelected = true;
                 break;
             case 'divide':
-                SelectedOps('÷');
+                tempOps = '÷';
+                operatorSelected = true;
                 break;
         }
     })
 })
 
-// Temporary arrays to store values that will display on the calc screen
-let temp = [];
-
-const screen = document.getElementById('screen');
 
 function ScreenDisplay(key) {
     clearBtn.textContent = 'C';
 
-    if(Number.isInteger(key)) {
-        temp.push(key);
-        let value = temp.join('');
-        screen.textContent = value;
+    if(Number.isInteger(key) && operatorSelected === false) {
+        temp1.push(key);
+        let value1 = temp1.join('');
+        screen.textContent = value1;
+        number1 = parseInt(value1);
+    } else if (Number.isInteger(key) && operatorSelected === true) {
+        temp2.push(key);
+        let value2 = temp2.join('');
+        screen.textContent = value2;
+        number2 = parseInt(value2);
+    } else if (key === '=') {
+        screen.textContent = result;
     }
 }
 
-const SelectedOps = function(operator) {
-    return operator;
-    // console.log(operator);
+
+
+const add = function(num1, num2) {
+    result = num1 + num2;
+    return result;
 }
 
-const ValueOne = function(numArr) {
-    let value = numArr.join('');
-    let number1 = parseInt(value);
-    temp = [];
-    ValueTwo(temp);
-    // return number1;
-    // console.log(number1);
+const subtract = function(num1, num2) {
+    result = num1 - num2;
+    return result;
 }
 
-const ValueTwo = function(numArr) {
-    let value = numArr.join('');
-    let number2 = parseInt(value);
-    // return number2;
-    // console.log(number2);
+const multiply = function(num1, num2) {
+    result = num1 * num2;
+    return result;
 }
 
-
-// Result/ Equals
-const equalsBtn = document.querySelector('.equals');
-equalsBtn.addEventListener('click', function() {
-})
-
-// operations
-const clearBtn = document.querySelector('.clear');
-const posNegBtn = document.querySelector('.pos-neg');
-const percentBtn = document.querySelector('.percent');
-// const addBtn = document.querySelector('.add');
-// const subtractBtn = document.querySelector('.subtract');
-// const multiplyBtn = document.querySelector('.multiply');
-// const divideBtn = document.querySelector('.divide');
-
-
-// addBtn.addEventListener('click', function() {
-//     SelectedOps('+');
-//     operatorSelected = true;
-// })
-
-// subtractBtn.addEventListener('click', function() {
-//     temp = [];
-// })
-
-// multiplyBtn.addEventListener('click', function() {
-//     temp = [];
-// })
-
-// divideBtn.addEventListener('click', function() {
-//     temp = [];
-// })
-
-
-
-
-// numbers 
-// const zeroBtn = document.querySelector('.zero');
-// const oneBtn = document.querySelector('.one');
-// const twoBtn = document.querySelector('.two');
-// const threeBtn = document.querySelector('.three');
-// const fourBtn = document.querySelector('.four');
-// const fiveBtn = document.querySelector('.five');
-// const sixBtn = document.querySelector('.six');
-// const sevenBtn = document.querySelector('.seven');
-// const eightBtn = document.querySelector('.eight');
-// const nineBtn = document.querySelector('.nine');
-
-// Variable counts the amount of #'s in the screen to decrease font size to fit display
-// let count = 0;
-
-
-// screen numbers
-
-
-
-// zeroBtn.addEventListener('click', function(){
-//     ScreenDisplay(0);
-//     operatorSelected = false;
-//     // StoreValues(temp);
-// });
-// oneBtn.addEventListener('click', function(){
-//     ScreenDisplay(1);
-//     operatorSelected = false;
-//     // StoreValues(temp);
-// });
-// twoBtn.addEventListener('click', function(){
-//     ScreenDisplay(2);
-//     operatorSelected = false;
-//     // StoreValues(temp);
-// });
-// threeBtn.addEventListener('click', function(){
-//     ScreenDisplay(3);
-//     operatorSelected = false;
-//     // StoreValues(temp);
-// });
-// fourBtn.addEventListener('click', function(){
-//     ScreenDisplay(4);
-//     operatorSelected = false;
-//     // StoreValues(temp);
-// });
-// fiveBtn.addEventListener('click', function(){
-//     ScreenDisplay(5);
-//     operatorSelected = false;
-//     // StoreValues(temp);
-// });
-// sixBtn.addEventListener('click', function(){
-//     ScreenDisplay(6);
-//     operatorSelected = false;
-//     // StoreValues(temp);
-// });
-// sevenBtn.addEventListener('click', function(){
-//     ScreenDisplay(7);
-//     operatorSelected = false;
-//     // StoreValues(temp);
-// });
-// eightBtn.addEventListener('click', function(){
-//     ScreenDisplay(8);
-//     operatorSelected = false;
-//     // StoreValues(temp);
-// });
-// nineBtn.addEventListener('click', function(){
-//     ScreenDisplay(9);
-//     operatorSelected = false;
-//     // StoreValues(temp);
-// });
-
-
-clearBtn.onclick = () => ClearScreen();
-
-
+const divide = function(num1, num2) {
+    result = num1 / num2;
+    return result;
+}
 
 const Operate = function(ops, num1, num2) {
     switch (ops) {
         case '+':
             add(num1, num2);
             break;
+        case '-':
+            subtract(num1, num2);
+            break;
+        case 'x':
+            multiply(num1, num2);
+            break;
+        case '÷':
+            divide(num1, num2);
+            break;
     }
 }
 
 
+// Result
+equalsBtn.addEventListener('click', function() {
+    Operate(tempOps, number1, number2);
+    operatorSelected = false;
+    ScreenDisplay('=');
+    temp1 = [];
+    temp2 = [];
+})
 
+
+clearBtn.onclick = () => ClearScreen();
 function ClearScreen() {
     clearBtn.textContent = 'AC';
-    screen.textContent = '0';
-    screen.style.fontSize = '50px';
-    count = 0;
-    temp = [];
+    screen.textContent = '';
+    screen.style.fontSize = '25px';
+    tempOps = '';
+    temp1 = [];
+    temp2 = [];
 }
 
-const add = function(num1, num2) {
-    let result = num1 + num2;
-    console.log(result);
-    // return result = num1 + num2;
-}
-
-const subtract = function() {
-
-}
-
-const multiply = function() {
-
-}
-
-const divide = function() {
-
-}
-
-
-window.onload = () => {
-    ClearScreen();
-}
+// window.onload = () => {
+//     ClearScreen();
+// }
