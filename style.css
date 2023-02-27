@@ -14,44 +14,42 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    height: 31em;
+    justify-content: center;
+    height: 30em;
     width: 17em;
     border-radius: 25px;
-    background-color: #272626;
+    background-color: white;
+    box-shadow: 1px 1px 0px #c7c7c7,
+                2px 2px 0px #c7c7c7,
+                3px 3px 0px #c7c7c7,
+                4px 4px 0px #c7c7c7,
+                5px 5px 0px #c7c7c7,
+                6px 6px 0px #c7c7c7;
 }
 
 .screen-container {
-    height: 6.5em;
+    height: 4em;
     width: 13.8em;
     margin-bottom: 80px;
 }
 
 #screen {
-    display: flex;
-    flex-direction: column;
-    border: 2px solid;
-    background-color: white;
-    height: 140px;
-    width: auto;
-    margin-top: 20px;
     color: black;
+    font-size: 50px;
     text-align: right;
-    font-size: 25px;
-}
-
-#display {
-    text-indent: 10px;
+    margin-top: 50px;
 }
 
 button {
-    border: solid #272626;
-    border-radius: 20%;
-    height: 50px;
-    width: 50px;
-    margin: 5px;
+    border: solid white;
+    border-radius: 50%;
+    height: 60px;
+    width: 60px;
     font-size: 20px;
 }
 
+
+/* AC, % */
 .grey {
     background-color: #b0b0af;
 }
@@ -60,21 +58,25 @@ button {
     background-color: #d6d6d6;
 }
 
+
+/* Operators */
 .orange {
     background-color: #ed6125;
     color: #fafafa;
 }
 
 .orange:active {
-    background-color: #fafafa;
+    background-color: white;
     color: #ed6125;
 }
 
-.operator-chosen {
+/* .operator-chosen {
     background-color: #f8b195;
     color: #f67280;
-}
+} */
 
+
+/* Numbers */
 .dark-grey {
     background-color: #5d5b5b;
     color: #ffffff;
@@ -84,17 +86,19 @@ button {
     background-color: #a09fa2;
 }
 
-#zero {
+
+/* Power button */
+#power {
+    color: #fff;
+    text-shadow:
+        0 0 7px #0fa,
+        0 0 10px #0fa,
+        0 0 21px #0fa,
+        0 0 42px #0fa,
+        0 0 82px #fff,
+        0 0 92px #fff,
+        0 0 102px #fff,
+        0 0 151px #fff;
     background-color: #5d5b5b;
-    color: white;
-    width: 115px;
-    border-radius: 10px;
-    text-align: left;
-    text-indent: 12px;
-}
-
-
-#zero:active {
-    background-color: #a09fa2;
 }
 

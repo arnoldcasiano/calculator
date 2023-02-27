@@ -1,186 +1,133 @@
-// All numbers and all operators buttons
-const operations = document.querySelectorAll('.ops');
-const numbers = document.querySelectorAll('.number');
-
-// Clear and Equals buttons
-const clearBtn = document.querySelector('.clear');
-const equalsBtn = document.querySelector('.equals');
+const buttons = document.querySelectorAll('button');
 const screen = document.getElementById('screen');
-const display = document.getElementById('display');
-// const posNegBtn = document.querySelector('.pos-neg');
-// const percentBtn = document.querySelector('.percent');
 
-
-// Temporary arrays to store values that will display on the calc screen
-let temp1 = [];
-let temp2 = [];
-
-// Stores numbers that need to be operated on
-let number1;
-let number2;
-
-// This stores the result that will be outputed in the screen
-let result = document.getElementById('result');
-let total;
-
-// Temporary stores the current operator
-let tempOps = '';
-
-let operatorSelected = false;
-
-// Since numbers is a nodelist, Loop through each and get the numbers id to display each number
-numbers.forEach(number => {
-    number.addEventListener('click', function(e) {
-        switch(e.target.id) {
-            case 'zero':
-                ScreenDisplay(0);
-                StoreNums(0);
-                break;
-            case 'one':
-                ScreenDisplay(1);
-                StoreNums(1);
-                break;
-            case 'two':
-                ScreenDisplay(2);
-                StoreNums(2);
-                break;
-            case 'three':
-                ScreenDisplay(3);
-                StoreNums(3);
-                break;
-            case 'four':
-                ScreenDisplay(4);
-                StoreNums(4);
-                break;
-            case 'five':
-                ScreenDisplay(5);
-                StoreNums(5);
-                break;
-            case 'six':
-                ScreenDisplay(6);
-                StoreNums(6);
-                break;
-            case 'seven':
-                ScreenDisplay(7);
-                StoreNums(7);
-                break;
-            case 'eight':
-                ScreenDisplay(8);
-                StoreNums(8);
-                break;
-            case 'nine':
-                ScreenDisplay(9);
-                StoreNums(9);
-                break;
-        }
-    })
+buttons.forEach(button => {
+    button.addEventListener('click', function(e) {
+        let value = e.target.textContent;
+        UserInput(value);
+    });
 });
 
-operations.forEach(operator => {
-    operator.addEventListener('click', function(e) {
-        switch (e.target.id) {
-            case 'add':
-                tempOps = '+';
-                ScreenDisplay(tempOps);
-                operatorSelected = true;
-                break;
-            case 'subtract':
-                tempOps = '-';
-                ScreenDisplay(tempOps);
-                operatorSelected = true;
-                break;
-            case 'multiply':
-                tempOps = 'x';
-                ScreenDisplay(tempOps);
-                operatorSelected = true;
-                break;
-            case 'divide':
-                tempOps = '÷';
-                ScreenDisplay(tempOps);
-                operatorSelected = true;
-                break;
+let operator = '';
+let num1 = '';
+let num2 = '';
+let storedInputs = [];
+let isNegative = false;
+let percent = false;
+let decimalAdded = false; 
+
+function UserInput(input) {
+    if (input === 'AC' || input === 'C') {
+        storedInputs = [];
+        decimalAdded = false;
+        DisplayNums('');
+        num1 = '';
+        num2 = '';
+        document.getElementById('ac').textContent = 'AC';
+    } else if (input === '+/-') {
+        isNegative = !isNegative; // toggles when clicked
+        if (isNegative) {
+            DisplayNums('-');
+        } else {
+            DisplayNums('');
         }
-    })
-})
-
-
-function ScreenDisplay(key) {
-    clearBtn.textContent = 'C';
-
-    display.textContent += key;
-}
-
-function StoreNums(num) {
-    if(Number.isInteger(num) && operatorSelected === false) {
-        temp1.push(num);
-        let value1 = temp1.join('');
-        number1 = parseInt(value1);
-    } else if (Number.isInteger(num) && operatorSelected === true) {
-        temp2.push(num);
-        let value2 = temp2.join('');
-        number2 = parseInt(value2);
+    } else if (input === '%') {
+        percent = true;
+        if (storedInputs.length > 0 && percent) {
+            let percentNum = Operate('x', storedInputs.join(''), .01);
+            DisplayNums(percentNum);
+        }
+    } else if (input === '0' || input === '1' || input === '2' || input ===  '3' || input === '4' || input === '5' || input === '6' || input === '7' || input === '8' || input === '9' || input === '.') {
+        // Decimal check for more than one
+        if (input === '.') {
+            if (decimalAdded) {
+                return; // exits function if decimal has been added already and '.' is not added to StoredInputs
+            } else {
+                decimalAdded = true;
+            }
+        }
+        // Checks if the pos/neg button has been clicked to modify number 
+        if (isNegative) {
+            storedInputs.unshift('-') // Adds neg sign at the beginning 
+            isNegative = false; // resets
+        }
+        // Clear button changes from AC to C
+        if (screen.textContent === '') {
+            document.getElementById('ac').textContent = 'AC';
+        } else {
+            document.getElementById('ac').textContent = 'C';
+        }
+        // Stores number and displays it on screen
+        storedInputs.push(input);
+        DisplayNums(storedInputs.join(''));
+    } else if (input === '+' || input === '-' || input === 'x' || input === '÷') {
+        if (num1 === '') {
+            num1 = storedInputs.join('') || num1;
+        } else {
+            num2 = storedInputs.join('');
+            if (num2) {
+                let currentTotal = Operate(operator, num1, num2);
+                num1 = currentTotal;
+                storedInputs = [];
+            }
+            DisplayNums(num1);
+        }
+        operator = input; 
+        storedInputs = [];
+        decimalAdded = false; // resets decimal point
+    } else if (input === '=') {
+        num2 = storedInputs.join('') || num2;
+        let result = Operate(operator, num1, num2);
+        num1 = result;
+        storedInputs = [];
+        DisplayNums(num1);
     }
 }
 
 
 
-const add = function(num1, num2) {
-    total = num1 + num2;
-    result.textContent = total
-    return total;
+function DisplayNums(num) {
+    screen.textContent = '';
+    screen.textContent = num.toString().substring(0, 8);
 }
 
-const subtract = function(num1, num2) {
-    total = num1 - num2;
-    result.textContent = total
-    return total;
-}
 
-const multiply = function(num1, num2) {
-    total = num1 * num2;
-    result.textContent = total
-    return total
-}
 
-const divide = function(num1, num2) {
-    total = num1 / num2;
-    result.textContent = total
-    return total;
-}
+const Operate = function(op, num1, num2) {
+    num1 = parseFloat(num1);
+    num2 = parseFloat(num2);
+    let result;
 
-const Operate = function(ops, num1, num2) {
-    switch (ops) {
+    switch (op) {
         case '+':
-            add(num1, num2);
-            break;
+             result = num1 + num2;
+             break;
         case '-':
-            subtract(num1, num2);
-            break;
+             result = num1 - num2;
+             break;
         case 'x':
-            multiply(num1, num2);
-            break;
+             result = num1 * num2;
+             break;
         case '÷':
-            divide(num1, num2);
+            if (num2 === 0) {
+                 result = 0;
+            } else {
+                 result = num1 / num2;
+            }
             break;
     }
-}
-
-
-// Result
-equalsBtn.addEventListener('click', function() {
-    Operate(tempOps, number1, number2);
-    operatorSelected = false;
-    temp1 = [];
-    temp2 = [];
-})
-
-
-clearBtn.onclick = () => ClearScreen();
-function ClearScreen() {
-    clearBtn.textContent = 'AC';
-    display.textContent = '';
-    result.textContent = '';
-    tempOps = '';
-    temp1 = [];
-    temp2 = [];
+    // If result contains decimal point display only two decimal points otherwise display w/out decimal point
+    if (result % 1 === 0) {
+        return result;
+    } else {
+        let resultStr = result.toString(); 
+        if (resultStr.indexOf('.') !== -1) { // if decimal point is found 
+            let decimalSplit = resultStr.split('.'); // splits the left side of the decimal pt from the right side of decimal pt
+            if (decimalSplit[1].length === 1) {
+                return result.toFixed(1);
+            } else {
+                return result.toFixed(2);
+            }
+        }
+    }
 }
